@@ -1,132 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>禪一表單報名查詢系統</title>
-    <style>
-      body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
-      .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-      .search-box { margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 4px; }
-      .result-box { margin-top: 20px; padding: 20px; background: #e8f0fe; border-radius: 4px; }
-      input[type="text"] { width: 150px; padding: 10px; border: 2px solid #4285f4; border-radius: 4px; }
-      button { background: #4285f4; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
-      .loading { display: none; text-align: center; margin: 20px 0; }
-      .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #4285f4; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 0 auto; }
-      h1 { font-size: 1.5rem; } /* 標題字體縮小 */
-      .warning { color: #d93025; margin: 10px 0 20px 0; font-size: 0.9rem; text-align: center; } /* 警語樣式 */
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      .error-message { color: #d93025; margin-top: 10px; }
-    </style>
+  <meta charset="UTF-8">
+  <title>桃園小中心</title>
 </head>
 <body>
-    <div class="container">
-        <h1>禪一表單報名查詢系統</h1>
-        <div class="warning">此為表單報名結果，<br>
-            最終請於周三官方公告為主</div>
-        
-        <div class="search-box">
-            <label>請輸入您的共修編號:</label><br><br>
-            <input type="text" id="searchInput" placeholder="請輸入...">
-            <button onclick="searchData()">查詢</button>
-        </div>
-        
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p>查詢中，請稍候...</p>
-        </div>
-        
-        <div class="result-box" id="result" style="display: none;">
-            <!-- 查詢結果將在這裡顯示 -->
-        </div>
-    </div>
-
-    <script>
-    // 替換成您的 API 金鑰和試算表 ID
-    const API_KEY = 'AIzaSyBPEMR-1hpLLOMVWxOfU6g5sY-yZb8GHzc';
-    const SHEET_ID = '1J4WCvzOLBX3dBLG6fOkCg8MoNvUW7unvNHLCZqjUkwg';
-    const RANGE = 'forcheck!A2:Z'; // 根據您的資料範圍調整，涵蓋所有可能的欄位
-    
-    async function searchData() {
-        const searchTerm = document.getElementById('searchInput').value.trim();
-        if (!searchTerm) {
-            alert('請輸入共修編號');
-            return;
-        }
-
-        // 顯示載入動畫
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('result').style.display = 'none';
-        
-        try {
-            const response = await fetch(
-                `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`
-            );
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            
-            if (!data.values || data.values.length === 0) {
-                showNoResults();
-                return;
-            }
-
-            // 搜尋結果 - 尋找共修編號相符的資料
-            // 假設共修編號在第一欄 (索引 0)
-            const results = data.values.filter(row => 
-                row[0] && row[0].toString().trim() === searchTerm
-            );
-
-            if (results.length === 0) {
-                showNoResults();
-                return;
-            }
-
-            // 顯示結果
-            showResult(results[0]); // 只顯示第一筆符合的資料
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('result').style.display = 'block';
-            document.getElementById('result').innerHTML = `
-                <p class="error-message">查詢過程中發生錯誤，請稍後再試</p>
-            `;
-        } finally {
-            // 隱藏載入動畫
-            document.getElementById('loading').style.display = 'none';
-        }
-    }
-    
-    function showResult(rowData) {
-        // 假設欄位順序：共修編號、報名者、清掃區域、公務、交通方式、上車地點、晚餐
-        // 您可能需要根據實際的試算表結構調整這些索引
-        const nameIndex = 1;        // 報名者
-        const cleanIndex = 2;       // 清掃區域
-        const workIndex = 3;        // 公務
-        const transportIndex = 4;   // 交通方式
-        const locationIndex = 5;    // 上車地點
-        const dinnerIndex = 6;      // 晚餐
-        
-        const resultDiv = document.getElementById('result');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = `
-            <h3>查詢結果</h3>
-            <p>報名者：${rowData[nameIndex] || '未填寫'}</p>
-            <p>清掃區域：${rowData[cleanIndex] || '未填寫'}</p>
-            <p>公務：${rowData[workIndex] || '未填寫'}</p>
-            <p>交通方式：${rowData[transportIndex] || '未填寫'}</p>
-            <p>上車地點：${rowData[locationIndex] || '未填寫'}</p>
-            <p>晚餐：${rowData[dinnerIndex] || '未填寫'}</p>
-        `;
-    }
-    
-    function showNoResults() {
-        const resultDiv = document.getElementById('result');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<p>找不到相關報名資料</p>';
-    }
-    </script>
+  <h1>桃園小中心</h1>
+  <p>請選擇要前往的功能頁面：</p>
+  <ul>
+    <li><a href="./check1.html">禪一表單報名確認</a></li>
+    <li><a href="./check2.html">輪值工作+禪一表單報名確認</a></li>
+  </ul>
 </body>
 </html>
