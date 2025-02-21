@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>桃園小中心</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>桃園小中心</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; font-size: 16px; line-height: 1.5; }
+      .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+      .search-box { margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 4px; }
+      input[type="text"] { width: 150px; padding: 10px; border: 2px solid #4285f4; border-radius: 4px; font-size: 1rem; }
+      button { background: #4285f4; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+      .loading { display: none; text-align: center; margin: 20px 0; }
+      .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #4285f4; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 0 auto; }
+      h1 { font-size: 1.5rem; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      .error-message { color: #d93025; margin-top: 10px; font-size: 1rem; }
+    </style>
 </head>
 <body>
-  <h1>桃園小中心</h1>
-  <p>請選擇要前往的功能頁面：</p>
-  <ul>
-    <li><a href="./check1.html">禪一表單報名確認</a></li>
-    <li><a href="./check2.html">輪值工作+禪一表單報名確認</a></li>
-  </ul>
+  <div class="container">
+    <h1>桃園小中心</h1>
+    <div class="search-box">
+      <p>請選擇要前往的頁面：</p>
+      <ul>
+        <li><a href="./check1.html">禪一表單報名確認</a></li>
+        <li><a href="./check2.html">輪值工作+禪一表單報名確認</a></li>
+      </ul>
+    </div>
+  </div>
 </body>
 </html>
