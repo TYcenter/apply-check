@@ -1,0 +1,9 @@
+# 忽略包含敏感信息的配置文件
+config.js
+
+# 忽略常見的系統文件
+.DS_Store
+Thumbs.db
+
+# 忽略 node_modules (如果有的話)
+node_modules/
